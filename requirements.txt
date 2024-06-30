@@ -1,0 +1,7 @@
+Flask==2.1.2
+Pillow==9.1.1
+numpy==1.23.1
+opencv-python==4.7.0.90
+rembg==2.0.25
+pyunpack==0.2.1
+patool==1.12
