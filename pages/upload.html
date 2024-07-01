@@ -8,6 +8,38 @@
     <link rel="icon" type="image/png" href="https://icons.getbootstrap.com/assets/icons/coin.svg" />
     <link rel="stylesheet" href="../css/result.css" />
     <style>
+      
+.lds-dual-ring,
+.lds-dual-ring:after {
+  box-sizing: border-box;
+}
+.lds-dual-ring {
+  display: inline-block;
+  width: 20px; /* Ubah ukuran sesuai kebutuhan */
+  height: 20px; /* Ubah ukuran sesuai kebutuhan */
+}
+.lds-dual-ring:after {
+  content: " ";
+  display: block;
+  width: 16px; /* Sesuaikan dengan 80% dari width */
+  height: 16px; /* Sesuaikan dengan 80% dari height */
+  margin: 5px; /* Sesuaikan margin sesuai kebutuhan */
+  border-radius: 50%;
+  border: 1.6px solid currentColor; /* Sesuaikan ketebalan border sesuai kebutuhan */
+  border-color: currentColor transparent currentColor transparent;
+  animation: lds-dual-ring 1.2s linear infinite;
+}
+
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+
       body {
         background-color: #f5f5f5;
       }
@@ -19,6 +51,9 @@
         border-radius: 10px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         background-color: #fff;
+      }
+      .ml-20 {
+        margin-left: 20px;
       }
       .preview {
         width: 100%;
@@ -90,7 +125,9 @@
         var formData = new FormData(this);
 
         document.getElementById("statusMessage").innerText = "Proses sedang berjalan, harap tunggu...";
-
+        var loadingIndicator = document.createElement("div")
+        loadingIndicator.className = "lds-dual-ring"
+        document.getElementById("statusMessage").appendChild(loadingIndicator);
         fetch("/upload", {
           method: "POST",
           body: formData,
@@ -99,13 +136,16 @@
         .then(data => {
           if (data.status === "success") {
             document.getElementById("statusMessage").innerText = "Proses selesai. Gambar dapat diunduh.";
-            var link = document.createElement("a");
-            link.href = "/download/" + data.filename;
-            link.innerText = "Unduh Gambar";
-            document.getElementById("statusMessage").appendChild(link);
-          } else {
-            document.getElementById("statusMessage").innerText = "Terjadi kesalahan selama pemrosesan.";
-          }
+            var button = document.createElement("button");
+            button.className = "btn btn-success ml-20";
+            button.innerText = "Unduh Gambar";
+            button.onclick = function() {
+              window.location.href = "/download/" + data.filename;
+            };
+            document.getElementById("statusMessage").appendChild(button);
+            } else {
+                document.getElementById("statusMessage").innerText = "Terjadi kesalahan selama pemrosesan.";
+            }
         })
         .catch(error => {
           console.error("Error:", error);
