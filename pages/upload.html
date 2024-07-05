@@ -8,37 +8,35 @@
     <link rel="icon" type="image/png" href="https://icons.getbootstrap.com/assets/icons/coin.svg" />
     <link rel="stylesheet" href="../css/result.css" />
     <style>
-      
-.lds-dual-ring,
-.lds-dual-ring:after {
-  box-sizing: border-box;
-}
-.lds-dual-ring {
-  display: inline-block;
-  width: 20px; /* Ubah ukuran sesuai kebutuhan */
-  height: 20px; /* Ubah ukuran sesuai kebutuhan */
-}
-.lds-dual-ring:after {
-  content: " ";
-  display: block;
-  width: 16px; /* Sesuaikan dengan 80% dari width */
-  height: 16px; /* Sesuaikan dengan 80% dari height */
-  margin: 5px; /* Sesuaikan margin sesuai kebutuhan */
-  border-radius: 50%;
-  border: 1.6px solid currentColor; /* Sesuaikan ketebalan border sesuai kebutuhan */
-  border-color: currentColor transparent currentColor transparent;
-  animation: lds-dual-ring 1.2s linear infinite;
-}
+      .lds-dual-ring,
+      .lds-dual-ring:after {
+        box-sizing: border-box;
+      }
+      .lds-dual-ring {
+        display: inline-block;
+        width: 20px; 
+        height: 20px; 
+      }
+      .lds-dual-ring:after {
+        content: " ";
+        display: block;
+        width: 16px; 
+        height: 16px; 
+        margin: 5px; 
+        border-radius: 50%;
+        border: 1.6px solid currentColor; 
+        border-color: currentColor transparent currentColor transparent;
+        animation: lds-dual-ring 1.2s linear infinite;
+      }
 
-@keyframes lds-dual-ring {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
+      @keyframes lds-dual-ring {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
 
       body {
         background-color: #f5f5f5;
@@ -72,6 +70,33 @@
         max-height: 100%;
         object-fit: cover;
       }
+      .radio-button {
+        display: inline-block;
+        margin-right: 20px;
+      }
+      .radio-button label {
+        display: inline-block;
+        padding: 10px 20px;
+        border-radius: 10px;
+        background-color: #eee;
+        cursor: pointer;
+        width: 200px;
+        text-align: center;
+        color: #6c757d;
+        font-weight: 600;
+      }
+      .radio-button input[type="radio"] {
+        display: none;
+      }
+      .radio-button input[type="radio"]:checked + label {
+        background-color: #787878;
+        color: #fff;
+      }
+      .form-label,
+      #statusMessage {
+        color: #6c757d;
+        font-weight: 500;
+      }
     </style>
   </head>
   <body>
@@ -79,27 +104,36 @@
       <h1 class="my-4 text-center">Batch Editor Program</h1>
       <form id="uploadForm" enctype="multipart/form-data">
         <div class="mb-3">
-          <label for="image" class="form-label">Masukkan gambar/File Compressed yang berisi gambar yang ingin di proses</label>
-          <input type="file" id="imageFile" name="imageFile" accept=".zip,.rar,.7z,.png,.jpg,.jpeg,.tif">
-          <br />
+          <label for="imageFile" class="form-label">Masukkan gambar/File Compressed yang berisi gambar yang ingin di proses</label>
+          <input type="file" id="imageFile" name="imageFile" class="form-control" accept=".zip,.rar,.7z,.png,.jpg,.jpeg,.tif">
         </div>
         <div class="mb-3">
-          <label class="form-label">Pilih Fitur yang akan proses</label>
+          <label class="form-label">Pilih Fitur yang akan diproses</label>
+          <div class="d-flex flex-wrap">
+            <div class="radio-button">
+              <input type="radio" id="blurring_bg" name="selectFitur" value="blurring_bg">
+              <label for="blurring_bg">Blurring Background</label>
+            </div>
+            <div class="radio-button">
+              <input type="radio" id="remove_bg" name="selectFitur" value="remove_bg">
+              <label for="remove_bg">Remove Background</label>
+            </div>
+          </div>
           <br>
-          <label for="blurring_bg" class="form-label">Blurring Background</label>
-          <input type="radio" id="blurring_bg" name="selectFitur" value="blurring_bg"> 
-          <br>
-          <label for="remove_bg" class="form-label">Remove Background</label>
-          <input type="radio" id="remove_bg" name="selectFitur" value="remove_bg"> 
-          <br>
-          <label for="colorize" class="form-label">Image Colorize</label>
-          <input type="radio" id="colorize" name="selectFitur" value="colorize"> 
-          <br>
-          <label for="grayscale" class="form-label">Color to Grayscale</label>
-          <input type="radio" id="grayscale" name="selectFitur" value="grayscale"> 
-          <br />
+          <div class="d-flex flex-wrap">
+            <div class="radio-button">
+              <input type="radio" id="colorize" name="selectFitur" value="colorize">
+              <label for="colorize">Image Colorize</label>
+            </div>
+            <div class="radio-button">
+              <input type="radio" id="grayscale" name="selectFitur" value="grayscale">
+              <label for="grayscale">Color to Grayscale</label>
+            </div>
+          </div>
         </div>
-        <button type="submit" class="btn btn-success" onclick="return checkFile()">Process</button>
+        <i class="bi bi-arrow-down-circle"></i>
+        <button type="submit" class="btn btn-success" onclick="return checkFile()">Process
+        </button>
       </form>
       <div id="statusMessage" class="mt-4"></div>
     </div>
@@ -143,9 +177,9 @@
               window.location.href = "/download/" + data.filename;
             };
             document.getElementById("statusMessage").appendChild(button);
-            } else {
-                document.getElementById("statusMessage").innerText = "Terjadi kesalahan selama pemrosesan.";
-            }
+          } else {
+            document.getElementById("statusMessage").innerText = "Terjadi kesalahan selama pemrosesan.";
+          }
         })
         .catch(error => {
           console.error("Error:", error);

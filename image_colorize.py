@@ -9,7 +9,6 @@ class ImageColorize:
         POINTS = os.path.join("model/pts_in_hull.npy")
         MODEL = os.path.join("model/colorization_release_v2.caffemodel")
 
-        print("Load model")
         net = cv2.dnn.readNetFromCaffe(PROTOTXT, MODEL)
         pts = np.load(POINTS)
 
@@ -26,7 +25,6 @@ class ImageColorize:
         L = cv2.split(resized)[0]
         L -= 50
 
-        print("Colorizing the image")
         net.setInput(cv2.dnn.blobFromImage(L))
         ab = net.forward()[0, :, :, :].transpose((1, 2, 0))
         ab = cv2.resize(ab, (image.shape[1], image.shape[0]))

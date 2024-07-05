@@ -12,6 +12,7 @@ import numpy as np
 from background_blurring import BackgroundBlurring
 import zipfile
 import concurrent.futures
+import time
 
 app = Flask(__name__, template_folder="pages")
 
@@ -83,7 +84,6 @@ def processImageBasedOnSelectedFeature(image, selectedFeature="", imageName=""):
         pillow_format = get_pillow_format(imageExt)
         image.save(image_io, format=pillow_format)
         image_io.seek(0)
-    print(f"ini image_io")
     newImageName = f'{imageNameWithNoExt}.{imageExt}'
     return image_io, newImageName
 
@@ -93,6 +93,8 @@ def index():
 
 @app.route('/upload', methods=['POST'])
 def upload(): 
+    start_time = time.time()
+    print("Image Mulai di proses...")
     if 'imageFile' not in request.files:
         return jsonify(status="error", message="No file part")
     file = request.files['imageFile']
@@ -109,6 +111,9 @@ def upload():
             output_path = os.path.join(tempfile.gettempdir(), f'{imageNameWithNoExt}.{newImageExt}')
             with open(output_path, 'wb') as f:
                 f.write(image_io.getbuffer())
+            end_time = time.time()  
+            execution_time = end_time - start_time
+            print(f'Waktu Eksekusi Program : {execution_time}')
             return jsonify(status="success", filename=f'{imageNameWithNoExt}.{newImageExt}')
         else:
             if file:
@@ -149,7 +154,9 @@ def upload():
                         zip_path = os.path.join(tempfile.gettempdir(), 'processed_images.zip')
                         with open(zip_path, 'wb') as f:
                             f.write(zip_io.getbuffer())
-                        
+                        end_time = time.time()  
+                        execution_time = end_time - start_time
+                        print(f'Waktu Eksekusi Program : {execution_time}')
                         return jsonify(status="success", filename='processed_images.zip')
             
             return jsonify(status="error", message="File not supported")
